@@ -1,0 +1,44 @@
+# Web Scraping
+scrapy
+requests
+urllib3
+
+# PDF Processing
+PyMuPDF
+pikepdf
+
+# Machine Learning and Deep Learning
+torch
+torchvision
+torchaudio
+tensorflow-macos
+tensorflow-metal
+
+
+# Hugging Face and NLP
+transformers
+datasets
+sentencepiece
+sentence-transformers
+
+# Vector Database and Embeddings
+chromadb
+numpy
+scipy
+
+# Data Processing
+pandas
+
+# Development Tools
+ipython
+jupyter
+pytest
+
+# Additional Utilities
+rich
+python-dotenv
+
+# Pip installable packages
+ollama
+scrapy-user-agents
+scrapy-proxies

@@ -34,4 +34,13 @@ class SpecSheetSpider(scrapy.Spider):
         
         # Follow other links for deeper crawling
         for next_page in response.css('a::attr(href)'):
+            # Extract the URL string
+            next_page_url = next_page.get()
+            # Skip mailto links 
+            if (next_page_url.startswith("mailto:") or 
+                next_page_url.startswith("tel:") or
+                next_page_url.endswith(".aspx")):
+                # Log the skipped link
+                self.logger.info(f"Skipping mailto link: {next_page}")
+                continue
             yield response.follow(next_page, self.parse)

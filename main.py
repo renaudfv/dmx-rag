@@ -9,7 +9,14 @@ PROCESS_PDFS = True
 
 def main():
     # Configuration
-    TARGET_WEBSITE = 'https://www.chauvetprofessional.com/'
+    WEBSITES = [
+        'https://www.adj.com/',
+        'https://www.chauvetprofessional.com/',
+        'https://www.elationlighting.com/',
+        'https://www.martin.com/',
+        'https://www.enttec.com/',
+        'https://www.etcconnect.com/',
+    ]
     DOWNLOAD_DIR = 'downloads'
     
     # Step 1: Web Crawling
@@ -24,17 +31,11 @@ def main():
 
         process.crawl(
             SpecSheetSpider, 
-            start_urls=[TARGET_WEBSITE], 
+            start_urls=WEBSITES, 
             download_dir=DOWNLOAD_DIR
         )
         process.start()
 
-        process.crawl(
-            SpecSheetSpider, 
-            start_urls=['https://www.adj.com/'], 
-            download_dir=DOWNLOAD_DIR
-        )
-        process.start()
     
     # Step 2: PDF Processing
     rag_engine = RAGEngine()

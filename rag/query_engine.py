@@ -11,8 +11,8 @@ class RAGEngine:
         self.embedder = SentenceTransformer(embedding_model)
         
         # Initialize ChromaDB
-        self.client = chromadb.Client()
-        self.collection = self.client.create_collection("product_specs")
+        self.client = chromadb.PersistentClient('./chroma')
+        self.collection = self.client.get_or_create_collection("product_specs")
         
         # LLM model
         self.llm_model = llm_model
@@ -47,7 +47,7 @@ class RAGEngine:
         
         # Retrieve documents
         results = self.collection.query(
-            query_embeddings=query_embed,
+            query_embeddings=[query_embed],
             n_results=top_k
         )
         

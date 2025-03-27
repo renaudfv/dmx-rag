@@ -5,6 +5,7 @@ from processors.pdf_extractor import PDFProcessor
 from rag.query_engine import RAGEngine
 
 CRAWL = False
+PROCESS_PDFS = True
 
 def main():
     # Configuration
@@ -36,14 +37,14 @@ def main():
         process.start()
     
     # Step 2: PDF Processing
-    processed_docs = PDFProcessor.process_pdf_directory(DOWNLOAD_DIR)
-    print('Processed docs')
-    # # Step 3: Create RAG System
     rag_engine = RAGEngine()
+    if PROCESS_PDFS:
+        processed_docs = PDFProcessor.process_pdf_directory(DOWNLOAD_DIR)
+        print('Processed docs')
     
-    # Index documents
-    document_texts = [doc['text'] for doc in processed_docs]
-    rag_engine.index_documents(document_texts)
+        # Index documents
+        document_texts = [doc['text'] for doc in processed_docs]
+        rag_engine.index_documents(document_texts)
     
     # Interactive Query Loop
     while True:

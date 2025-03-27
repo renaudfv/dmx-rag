@@ -14,7 +14,6 @@ torchaudio
 tensorflow-macos
 tensorflow-metal
 
-
 # Hugging Face and NLP
 transformers
 datasets

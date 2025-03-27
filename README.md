@@ -87,4 +87,3 @@ dmx-rag/
 - `CRAWL`: Set to `True` to enable web crawling
 - `PROCESS_PDFS`: Set to `True` to process PDFs and index documents
 - `DOWNLOAD_DIR`: Directory for storing downloaded PDFs (default: 'downloads')
-- 

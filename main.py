@@ -6,10 +6,14 @@ from rag.query_engine import RAGEngine
 from rag.evaluator import RAGEvaluator
 import argparse
 
-CRAWL = False
-PROCESS_PDFS = False
-
 def main():
+    # Command-line arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--crawl', action='store_true', help='Crawl through websites for spec sheets')
+    parser.add_argument('--process', action='store_true', help='Process downloaded PDFs')
+    parser.add_argument('--evaluate', action='store_true', help='Run RAG evaluation')
+    args = parser.parse_args()
+
     # Configuration
     WEBSITES = [
         'https://www.adj.com/',
@@ -21,8 +25,11 @@ def main():
     ]
     DOWNLOAD_DIR = 'downloads'
     
+    rag_engine = RAGEngine()
+
     # Step 1: Web Crawling
-    if CRAWL:
+    if args.crawl:
+        print('Starting web crawling...')
         process = CrawlerProcess(settings={
             'ITEM_PIPELINES': {
                 'crawler.pipelines.CustomFilesPipeline': 1,  # Use the custom pipeline
@@ -37,23 +44,20 @@ def main():
             download_dir=DOWNLOAD_DIR
         )
         process.start()
-
+        print('...Crawling complete.')
     
     # Step 2: PDF Processing
-    rag_engine = RAGEngine()
-    if PROCESS_PDFS:
+    if args.process:
+        print('Processing PDFs...')
         processed_docs = PDFProcessor.process_pdf_directory(DOWNLOAD_DIR)
-        print('Processed docs')
-    
+        print('...Processing complete.')
+        print(f'Indexed {len(processed_docs)} documents.')
+
         # Index documents
         document_texts = [doc['text'] for doc in processed_docs]
         rag_engine.index_documents(document_texts)
     
-    # Add evaluation mode
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--evaluate', action='store_true', help='Run RAG evaluation')
-    args = parser.parse_args()
-
+    # Step 3: RAG Evaluation
     if args.evaluate:
         # Sample evaluation questions
         eval_questions = [
@@ -86,7 +90,7 @@ def main():
         print(f"Coverage Score: {eval_results.coverage_score:.2f}")
         return
 
-    # Interactive Query Loop
+    # Step 4: Interactive Querying to RAG/LLM
     while True:
         query = input("Enter your product specification query (or 'exit' to quit): ")
         

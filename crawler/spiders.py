@@ -36,11 +36,23 @@ class SpecSheetSpider(scrapy.Spider):
         for next_page in response.css('a::attr(href)'):
             # Extract the URL string
             next_page_url = next_page.get()
-            # Skip mailto links 
-            if (next_page_url.startswith("mailto:") or 
-                next_page_url.startswith("tel:") or
-                next_page_url.endswith(".aspx")):
-                # Log the skipped link
-                self.logger.info(f"Skipping mailto link: {next_page}")
+            # Skip invalid or unwanted URLs
+            if not next_page_url:
                 continue
-            yield response.follow(next_page, self.parse)
+                
+            if any([
+                next_page_url.startswith(('javascript:', 'mailto:', 'tel:')),
+                next_page_url.endswith('.aspx'),
+                '#' in next_page_url,
+                'doPostBack' in next_page_url,
+                'javascript:void(0)' in next_page_url
+            ]):
+                self.logger.debug(f"Skipping invalid URL: {next_page_url}")
+                continue
+            
+            try:
+                # Try to follow the URL
+                yield response.follow(next_page_url, self.parse)
+            except ValueError as e:
+                self.logger.error(f"Invalid URL {next_page_url}: {str(e)}")
+                continue

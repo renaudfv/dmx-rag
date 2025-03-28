@@ -16,7 +16,8 @@ class RAGEngine:
         
         # LLM model
         self.llm_model = llm_model
-    
+        self.last_context = None
+
     def index_documents(self, documents):
         """
         Index documents in ChromaDB
@@ -53,7 +54,10 @@ class RAGEngine:
         
         # Retrieved context
         context = " ".join(results['documents'][0])
-        
+       
+        # Store context for evaluation
+        self.last_context = context
+
         # Generate response with Ollama
         response = ollama.chat(model=self.llm_model, messages=[
             {
